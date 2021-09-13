@@ -7,11 +7,15 @@ const addUser = (newUser) => {
   Users.push(newUser);
 };
 
-const findUser = () => {
-  console.log(_id.toString());
-  return Users.find((user, _id) => {
-    console.log(user);
-    return user._id === _id;
+const findUser = (_id) => {
+  const id = _id.toString();
+
+  return Users.find((user, id) => {
+    console.log(typeof id);
+    console.log(typeof user._id);
+
+
+    return user._id === id;
   });
 };
 
