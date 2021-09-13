@@ -6,7 +6,7 @@ const AddUser = (req, res) => {
   const { username } = req.body;
   const newUser = { _id, username };
 
-  Users.push(newUser);
+  Users.addUser(newUser)
 
   res.json(newUser);
 };
