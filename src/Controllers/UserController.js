@@ -1,6 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
-
-const Users = [];
+const Users = require("../Models/UserModel")
 
 const AddUser = (req, res) => {
   const _id = uuidv4().substr(0, 8);
@@ -13,16 +12,12 @@ const AddUser = (req, res) => {
 };
 
 const AllUsers = (req, res) => {
+  console.log(Users);
   res.json({ users: Users });
-};
-
-const AddExercises = (req, res) => {
-  const _id = req.params._id;
-  res.send(`id: ${_id} and Exercises`);
 };
 
 const LogsUser = (req, res) => {
   res.send("Some logs here :D");
 };
 
-module.exports = { AllUsers, AddUser, AddExercises, LogsUser };
+module.exports = { AllUsers, AddUser, LogsUser };
