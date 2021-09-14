@@ -1,6 +1,6 @@
 const Users = [
-  { _id: "12fsdf", username: "João" },
-  { _id: "453rfd", username: "Maria" },
+  { _id: "12fsdf", username: "João", log: [] },
+  { _id: "453rfd", username: "Maria", log: [] },
 ];
 
 const addUser = (newUser) => {
@@ -15,4 +15,16 @@ const getAllUsers = () => {
   return Users;
 };
 
-module.exports = { findUser, addUser, getAllUsers };
+const addExerciseLog = (newExercise) => {
+  const log = {
+    description: newExercise.description,
+    duration: newExercise.duration,
+    date: newExercise.date,
+  };
+  
+  var id = Users.findIndex((el)=>el._id === newExercise._id)
+
+  console.log(id);
+};
+
+module.exports = { findUser, addUser, getAllUsers, addExerciseLog };

@@ -38,6 +38,9 @@ const AddExercises = (req, res) => {
     description,
   };
 
+  Users.addExerciseLog(newExercise)
+
+
   res.json(newExercise);
 };
 
