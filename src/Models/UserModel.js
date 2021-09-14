@@ -1,6 +1,6 @@
 const Users = [
-  { _id: "12fsdf", username: "Bruno" },
-  { _id: "453rfd", username: "Joãozinho" },
+  { _id: "12fsdf", username: "João" },
+  { _id: "453rfd", username: "Maria" },
 ];
 
 const addUser = (newUser) => {
@@ -8,15 +8,11 @@ const addUser = (newUser) => {
 };
 
 const findUser = (_id) => {
-  const id = _id.toString();
-
-  return Users.find((user, id) => {
-    console.log(typeof id);
-    console.log(typeof user._id);
-
-
-    return user._id === id;
-  });
+  return Users.find((user) => user._id === _id);
 };
 
-module.exports = { Users, findUser, addUser };
+const getAllUsers = () => {
+  return Users;
+};
+
+module.exports = { findUser, addUser, getAllUsers };
