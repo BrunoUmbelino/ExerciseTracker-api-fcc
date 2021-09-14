@@ -21,7 +21,7 @@ const AddExercises = (req, res) => {
   let { description, duration, date } = req.body;
   duration = parseInt(duration);
 
-  const user = User.findUser(_id);
+  const user = Users.findUser(_id);
 
   if (!user) return res.send("User not found");
   if (!description) return res.send("Description is required!");
@@ -42,7 +42,12 @@ const AddExercises = (req, res) => {
 };
 
 const LogsUser = (req, res) => {
+  const { _id } = req.params;
+
+  const user = Users.findUser(_id);
+  if (!user) return res.send("User not found");
+
   res.send("Some logs here :D");
 };
 
-module.exports = { AllUsers, AddUser, LogsUser, AddExercises };
+module.exports = { AllUsers, AddUser, AddExercises, LogsUser };
