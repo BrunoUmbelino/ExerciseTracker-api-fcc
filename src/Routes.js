@@ -1,6 +1,5 @@
 const express = require("express");
-const UserController = require("./Controllers/UserController");
-const { pathToRegexp } = require("path-to-regexp");
+const UserController = require("./UserController");
 
 const Routes = express.Router();
 
