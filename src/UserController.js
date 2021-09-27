@@ -1,10 +1,24 @@
+const { validationResult } = require("express-validator");
 const Users = require("./UserModel");
+const { v4: uuidv4 } = require("uuid");
+
+const GetAllUsers = (req, res) => {
+  res.send(Users.getUsers());
+};
 
 const AddUser = (req, res) => {
-  const { v4: uuidv4 } = require("uuid");
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
 
   const _id = uuidv4().substr(0, 6);
   const { username } = req.body;
+
   const newUser = { _id, username };
 
   Users.addUser(newUser);
@@ -12,25 +26,26 @@ const AddUser = (req, res) => {
   res.json(newUser);
 };
 
-const AllUsers = (req, res) => {
-  res.send(Users.getUsers());
-};
-
 const AddExercises = (req, res) => {
+  const errors = validationResult(req);
   const { _id } = req.params;
   let { description, duration, date } = req.body;
-  duration = parseInt(duration);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
 
   const user = Users.findUser(_id);
-
   if (!user) return res.send("User not found.");
-  if (!description) return res.send("Description is required!");
-  if (!duration) return res.send("Duration is required and must be a number.");
-  if (!date) {
-    date = new Date().toDateString();
-  } else date = new Date(date).toDateString();
 
-  const newExercise = {
+  if (date) {
+    date = new Date(date + "T00:00:01").toDateString();
+  } else date = new Date().toDateString();
+
+  const LognewExercise = {
     username: user.username,
     description,
     duration,
@@ -38,25 +53,37 @@ const AddExercises = (req, res) => {
     _id: user._id,
   };
 
-  Users.addExerciseLog(newExercise);
-
-  res.json(newExercise);
+  Users.addExerciseLog(user, LognewExercise);
+  res.json(LognewExercise);
 };
 
 const LogsUser = (req, res) => {
   const { _id } = req.params;
   let { from, to, limit } = req.query;
-  limit = parseInt(limit);
-  console.log(from, to, limit);
+  const errors = validationResult(req);
+  let userLogs = {};
 
-  //if (!limit ) return res.send('Limit must be a number.')
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
 
-  console.log(limit);
-  const user = Users.findUser(_id, limit);
+  const user = Users.findUser(_id);
+  if (!user) return res.send("User not found.");
 
-  if (!user) return res.send("User not found");
+  if (from != undefined) from = new Date(from);
+  if (to != undefined) to = new Date(to);
 
-  res.send(user);
+  userLogs = Users.getLogsBetweenDatesAndLimit(user, from, to, limit);
+
+  res.send(userLogs);
 };
 
-module.exports = { AllUsers, AddUser, AddExercises, LogsUser };
+module.exports = {
+  GetAllUsers,
+  AddUser,
+  AddExercises,
+  LogsUser,
+};

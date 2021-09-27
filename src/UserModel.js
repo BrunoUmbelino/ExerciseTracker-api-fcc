@@ -7,17 +7,17 @@ const Users = [
       {
         description: "test1",
         duration: 60,
-        date: "Mon Jan 01 1990",
+        date: "Mon Jan 01 2017",
       },
       {
         description: "test2",
         duration: 60,
-        date: "Mon Jan 01 1990",
+        date: "Mon Jan 01 2019",
       },
       {
         description: "test3",
         duration: 60,
-        date: "Mon Jan 01 1990",
+        date: "Mon September 01 2021",
       },
     ],
   },
@@ -35,15 +35,8 @@ const addUser = (newUser) => {
   Users.push(user);
 };
 
-const findUser = (_id, limit = 0) => {
-  console.log(limit);
-
-  if (limit == 0) return Users.find((user) => user._id === _id);
-
+const findUser = (_id) => {
   const user = Users.find((user) => user._id === _id);
-  user.log = user.log.slice(0, limit);
-  console.log(user.log);
-
   return user;
 };
 
@@ -53,18 +46,40 @@ const getUsers = () => {
   });
 };
 
-const addExerciseLog = (newExercise) => {
-  let id = Users.findIndex((el) => el._id === newExercise._id);
-
+const addExerciseLog = (user, LognewExercise) => {
   const log = {
-    description: newExercise.description,
-    duration: newExercise.duration,
-    date: newExercise.date,
+    description: LognewExercise.description,
+    duration: LognewExercise.duration,
+    date: LognewExercise.date,
   };
 
-  Users[id].log.push(log);
-  Users[id].count += 1;
-  console.log(Users[id]);
+  user.log.push(log);
+  user.count += 1;
 };
 
-module.exports = { findUser, addUser, getUsers, addExerciseLog };
+const getLogsBetweenDatesAndLimit = (user, from, to, limit) => {
+  let logsFilteredByDate = user.log.filter((log) => {
+    const logParsedToDate = new Date(log.date);
+    return logParsedToDate >= from && logParsedToDate <= to;
+  });
+
+  console.log(limit);
+
+  user.log = logsFilteredByDate;
+
+  if (typeof limit != undefined) {
+    user.log = user.log.slice(0, limit);
+  }
+
+  console.log(logsFilteredByDate);
+
+  return user;
+};
+
+module.exports = {
+  findUser,
+  addUser,
+  getUsers,
+  addExerciseLog,
+  getLogsBetweenDatesAndLimit,
+};
