@@ -6,23 +6,34 @@ const Users = [
     log: [
       {
         description: "test1",
-        duration: 60,
+        duration: 10,
         date: "Mon Jan 01 2017",
       },
       {
         description: "test2",
-        duration: 60,
+        duration: 25,
         date: "Mon Jan 01 2019",
       },
       {
         description: "test3",
-        duration: 60,
+        duration: 45,
         date: "Mon September 01 2021",
       },
     ],
   },
   { _id: "453rfd", username: "Maria", count: 0, log: [] },
-  { _id: "90fxqh", username: "Joaquin", count: 0, log: [] },
+  {
+    _id: "90fxqh",
+    username: "Joaquin",
+    count: 0,
+    log: [
+      {
+        description: "run",
+        duration: 12,
+        date: "Mon September 01 2021",
+      },
+    ],
+  },
 ];
 
 const addUser = (newUser) => {
@@ -58,20 +69,21 @@ const addExerciseLog = (user, LognewExercise) => {
 };
 
 const getLogsBetweenDatesAndLimit = (user, from, to, limit) => {
-  let logsFilteredByDate = user.log.filter((log) => {
-    const logParsedToDate = new Date(log.date);
-    return logParsedToDate >= from && logParsedToDate <= to;
-  });
-
-  console.log(limit);
-
-  user.log = logsFilteredByDate;
+  if (from !== undefined && to !== undefined) {
+    let logsFilteredByDate = user.log.filter((log) => {
+      const logParsedToDate = new Date(log.date);
+      const fromParsedDate = new Date(from);
+      const toParsedDate = new Date(to);
+      return (
+        logParsedToDate >= fromParsedDate && logParsedToDate <= toParsedDate
+      );
+    });
+    user.log = logsFilteredByDate;
+  }
 
   if (typeof limit != undefined) {
     user.log = user.log.slice(0, limit);
   }
-
-  console.log(logsFilteredByDate);
 
   return user;
 };

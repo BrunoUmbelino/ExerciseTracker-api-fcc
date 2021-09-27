@@ -48,7 +48,7 @@ const AddExercises = (req, res) => {
   const LognewExercise = {
     username: user.username,
     description,
-    duration,
+    duration: parseInt(duration),
     date,
     _id: user._id,
   };
@@ -72,9 +72,6 @@ const LogsUser = (req, res) => {
 
   const user = Users.findUser(_id);
   if (!user) return res.send("User not found.");
-
-  if (from != undefined) from = new Date(from);
-  if (to != undefined) to = new Date(to);
 
   userLogs = Users.getLogsBetweenDatesAndLimit(user, from, to, limit);
 

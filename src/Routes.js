@@ -1,21 +1,17 @@
 const express = require("express");
 const UserController = require("./UserController");
-const { query, body } = require("express-validator");
+const { query, body, check } = require("express-validator");
 
 const Routes = express.Router();
 
 Routes.get("/api/users", UserController.GetAllUsers);
-Routes.post(
-  "/api/users",
-  body("username").isAlphanumeric().isLength({ max: 20 }),
-  UserController.AddUser
-);
+Routes.post("/api/users", body("username").isString(), UserController.AddUser);
 
 Routes.post(
   "/api/users/:_id/exercises",
   body("description").isString().notEmpty(),
   body("duration").isNumeric(),
-  body("date").optional().isDate(),
+  body("date").isString().if(body("date").notEmpty()).isDate(),
   UserController.AddExercises
 );
 
